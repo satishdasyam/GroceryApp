@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:grocery_app/product_detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'product.dart';
 
@@ -50,10 +51,12 @@ class GroceryHomePage extends StatefulWidget {
 class _GroceryHomePageState extends State<GroceryHomePage> {
   final List<Product> productList = [];
   final String screenTitle = "Groceries";
+  late bool isProgressIndicatorToBeShown;
 
   @override
   void initState() {
     super.initState();
+    isProgressIndicatorToBeShown = true;
     fetchGroceryList();
   }
 
@@ -64,39 +67,67 @@ class _GroceryHomePageState extends State<GroceryHomePage> {
         title: Text(screenTitle),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: Center(
-          child: ListView.builder(
-              itemCount: productList.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  // In many cases, the key isn't mandatory
-                  key: ValueKey(productList[index].productId),
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(
-                          productList[index].title,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                        leading: Image.network(
-                          productList[index].image,
-                          width: 80,
-                          height: 80,
-                        ),
-                      )),
-                );
-              })),
+      body: Stack(children: <Widget>[
+        ListView.builder(
+            itemCount: productList.length,
+            itemBuilder: (context, index) {
+              return Card(
+                // In many cases, the key isn't mandatory
+                key: ValueKey(productList[index].productId),
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetailPage(item: productList[index])),
+                        );
+                      },
+                      title: Text(
+                        productList[index].title,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      subtitle: Text(
+                        productList[index].category,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      trailing: Text(
+                        '\u{20B9}${productList[index].price.toString()}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                      ),
+                      leading: Image.network(
+                        productList[index].image,
+                        width: 80,
+                        height: 80,
+                      ),
+                    )),
+              );
+            }),
+        Visibility(
+            visible: isProgressIndicatorToBeShown,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ))
+      ]),
     );
   }
 
   void fetchGroceryList() async {
     http.Response response =
         await http.get(Uri.parse("https://fakestoreapi.com/products"));
-
+    setState(() {
+      isProgressIndicatorToBeShown = false;
+    });
     if (response.statusCode == 200) {
       List<Product> products = (json.decode(response.body) as List)
           .map((i) => Product.fromJson(i))
