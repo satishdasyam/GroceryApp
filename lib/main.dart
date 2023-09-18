@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:grocery_app/fetch_products_use_case.dart';
+import 'package:grocery_app/grocery_controller.dart';
 import 'package:grocery_app/product_detail_page.dart';
-import 'package:http/http.dart' as http;
+
 import 'product.dart';
 
 void main() {
@@ -49,6 +49,8 @@ class GroceryHomePage extends StatefulWidget {
 }
 
 class _GroceryHomePageState extends State<GroceryHomePage> {
+  final GroceryController groceryController =
+      GroceryController(fetchProductsUseCase: FetchProductsUseCase());
   final List<Product> productList = [];
   final String screenTitle = "Groceries";
   late bool isProgressIndicatorToBeShown;
@@ -58,6 +60,14 @@ class _GroceryHomePageState extends State<GroceryHomePage> {
     super.initState();
     isProgressIndicatorToBeShown = true;
     fetchGroceryList();
+  }
+
+  void fetchGroceryList() async {
+   List<Product> prodList =  await groceryController.fetchGroceryList();
+   setState(() {
+     productList.addAll(prodList);
+     isProgressIndicatorToBeShown = false;
+   });
   }
 
   @override
@@ -120,21 +130,5 @@ class _GroceryHomePageState extends State<GroceryHomePage> {
             ))
       ]),
     );
-  }
-
-  void fetchGroceryList() async {
-    http.Response response =
-        await http.get(Uri.parse("https://fakestoreapi.com/products"));
-    setState(() {
-      isProgressIndicatorToBeShown = false;
-    });
-    if (response.statusCode == 200) {
-      List<Product> products = (json.decode(response.body) as List)
-          .map((i) => Product.fromJson(i))
-          .toList();
-      setState(() {
-        productList.addAll(products);
-      });
-    }
   }
 }
