@@ -10,5 +10,4 @@ class GroceryController {
     return fetchProductsUseCase.fetchGroceryList();
   }
 
-
 }
