@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_app/fetch_products_use_case.dart';
 import 'package:grocery_app/grocery_controller.dart';
 import 'package:grocery_app/product_detail_page.dart';
+import 'package:http/http.dart' as http;
 
 import 'product.dart';
 
@@ -36,7 +37,7 @@ class GroceryHomePage extends StatefulWidget {
 
 class _GroceryHomePageState extends State<GroceryHomePage> {
   final GroceryController groceryController =
-      GroceryController(fetchProductsUseCase: FetchProductsUseCase());
+      GroceryController(fetchProductsUseCase: FetchProductsUseCase(http.Client()));
   final List<Product> productList = [];
   final String screenTitle = "Groceries";
   late bool isProgressIndicatorToBeShown;
