@@ -13,6 +13,8 @@ void main() {
     expect(string.split(','), equals(['foo', 'bar', 'baz']));
   });*/
 
+ /** "dart run build_runner build" to generate mock class */
+
   group("fetchProducts", () {
     test('returns product list if the http status code is 200', () async {
       final client = MockClient((_) async => http.Response(
