@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:grocery_app/product.dart';
+import 'package:grocery_app/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class FetchProductsUseCase {

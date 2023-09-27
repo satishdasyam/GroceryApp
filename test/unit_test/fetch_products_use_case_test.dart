@@ -1,5 +1,6 @@
-import 'package:grocery_app/fetch_products_use_case.dart';
-import 'package:grocery_app/product.dart';
+@TestOn('vm')
+import 'package:grocery_app/grocery_list/fetch_products_use_case.dart';
+import 'package:grocery_app/models/product.dart';
 import 'package:http/testing.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -36,7 +37,7 @@ void main() {
           FetchProductsUseCase(client);
       final List<Product> prodList =
           await fetchProductsUseCase.fetchGroceryList();
-      expect(prodList.length, 0);
+      expect(prodList.isEmpty, true);
     });
   });
 }

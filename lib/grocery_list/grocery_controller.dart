@@ -1,6 +1,5 @@
-import 'package:grocery_app/fetch_products_use_case.dart';
-import 'package:grocery_app/product.dart';
-import 'package:http/http.dart' as http;
+import 'package:grocery_app/grocery_list/fetch_products_use_case.dart';
+import 'package:grocery_app/models/product.dart';
 
 class GroceryController {
   final FetchProductsUseCase fetchProductsUseCase;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/product.dart';
+import 'package:grocery_app/models/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final String title = "Product Details";
